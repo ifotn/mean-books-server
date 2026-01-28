@@ -9,3 +9,5 @@ Express REST API Backend
 `npm i typescript ts-node express` - app core dependencies
 
 `npm run dev` - start application using nodemon to watch for changes
+
+`npm i body-parser` - used to parse json body in http requests
