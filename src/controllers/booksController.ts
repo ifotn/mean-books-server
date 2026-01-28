@@ -30,3 +30,34 @@ export const createBook = (req: Request, res: Response) => {
     books.push(req.body);
     return res.status(201).json(); // 201: Success, Resource Created
 };
+
+// PUT: update book based on id in url param => /api/v1/books/3893
+export const updateBook = (req: Request, res: Response) => {
+    // find book in array based on id param
+    const index: number = books.findIndex(b => b.id.toString() === req.params.id.toString());
+
+    // book not found in array
+    if (index == -1) {
+        return res.status(404).json({ 'error': 'Not Found' });
+    }
+
+    // update book values from request body
+    books[index].title = req.body.title;
+    books[index].year = req.body.year;
+    return res.status(204).json(); // 204: Accepted, No Content
+};
+
+// DELETE: remove book based on id in url param => /api/v1/books/3893
+export const deleteBook = (req: Request, res: Response) => {
+    // find book in array based on id param
+    const index: number = books.findIndex(b => b.id.toString() === req.params.id.toString());
+
+    // book not found in array
+    if (index == -1) {
+        return res.status(404).json({ 'error': 'Not Found' });
+    }
+
+    // remove book from array
+    books.splice(index, 1);
+    return res.status(204).json(); // 204: Accepted, No Content
+};

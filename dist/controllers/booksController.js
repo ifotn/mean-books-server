@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createBook = exports.getBooks = void 0;
+exports.deleteBook = exports.updateBook = exports.createBook = exports.getBooks = void 0;
 // create mock book data in memory
 let books = [
     { id: 1, title: 'The Edible Woman', year: 1969 },
@@ -23,3 +23,30 @@ const createBook = (req, res) => {
     return res.status(201).json(); // 201: Success, Resource Created
 };
 exports.createBook = createBook;
+// PUT: update book based on id in url param => /api/v1/books/3893
+const updateBook = (req, res) => {
+    // find book in array based on id param
+    const index = books.findIndex(b => b.id.toString() === req.params.id.toString());
+    // book not found in array
+    if (index == -1) {
+        return res.status(404).json({ 'error': 'Not Found' });
+    }
+    // update book values from request body
+    books[index].title = req.body.title;
+    books[index].year = req.body.year;
+    return res.status(204).json(); // 204: Accepted, No Content
+};
+exports.updateBook = updateBook;
+// DELETE: remove book based on id in url param => /api/v1/books/3893
+const deleteBook = (req, res) => {
+    // find book in array based on id param
+    const index = books.findIndex(b => b.id.toString() === req.params.id.toString());
+    // book not found in array
+    if (index == -1) {
+        return res.status(404).json({ 'error': 'Not Found' });
+    }
+    // remove book from array
+    books.splice(index, 1);
+    return res.status(204).json(); // 204: Accepted, No Content
+};
+exports.deleteBook = deleteBook;
