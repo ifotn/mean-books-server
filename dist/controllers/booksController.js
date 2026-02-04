@@ -31,34 +31,48 @@ const createBook = async (req, res) => {
         return res.status(400).json({ 'error': 'Bad Request: Incomplete Data' });
     }
     // add new book from request body using model
-    await book_1.default.create(req.body);
-    return res.status(201).json(); // 201: Success, Resource Created
+    try {
+        await book_1.default.create(req.body);
+        return res.status(201).json(); // 201: Success, Resource Created
+    }
+    catch (error) {
+        return res.status(400).json({ 'error': error });
+    }
 };
 exports.createBook = createBook;
 // PUT: update book based on id in url param => /api/v1/books/3893
-const updateBook = (req, res) => {
-    // find book in array based on id param
-    //const index: number = books.findIndex(b => b.id.toString() === req.params.id.toString());
-    // book not found in array
-    // if (index == -1) {
-    //     return res.status(404).json({ 'error': 'Not Found' });
-    // }
+const updateBook = async (req, res) => {
+    // find book based on id param
+    const book = await book_1.default.findById(req.params.id);
+    // book not found 
+    if (!book) {
+        return res.status(404).json({ 'error': 'Book Not Found' });
+    }
     // update book values from request body
-    //books[index].title = req.body.title;
-    //books[index].year = req.body.year;
-    //return res.status(204).json(); // 204: Accepted, No Content
+    try {
+        await book_1.default.findByIdAndUpdate(req.params.id, req.body);
+        return res.status(204).json(); // 204: Accepted, No Content
+    }
+    catch (error) {
+        return res.status(400).json({ 'error': error });
+    }
 };
 exports.updateBook = updateBook;
 // DELETE: remove book based on id in url param => /api/v1/books/3893
-const deleteBook = (req, res) => {
-    // // find book in array based on id param
-    // const index: number = books.findIndex(b => b.id.toString() === req.params.id.toString());
-    // // book not found in array
-    // if (index == -1) {
-    //     return res.status(404).json({ 'error': 'Not Found' });
-    // }
-    // // remove book from array
-    // books.splice(index, 1);
-    // return res.status(204).json(); // 204: Accepted, No Content
+const deleteBook = async (req, res) => {
+    // find book based on id param
+    const book = await book_1.default.findById(req.params.id);
+    // book not found 
+    if (!book) {
+        return res.status(404).json({ 'error': 'Book Not Found' });
+    }
+    // update book values from request body
+    try {
+        await book_1.default.findByIdAndDelete(req.params.id, req.body);
+        return res.status(204).json(); // 204: Accepted, No Content
+    }
+    catch (error) {
+        return res.status(400).json({ 'error': error });
+    }
 };
 exports.deleteBook = deleteBook;

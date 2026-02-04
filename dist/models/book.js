@@ -37,7 +37,9 @@ const mongoose_1 = __importStar(require("mongoose"));
 const bookSchema = new mongoose_1.Schema({
     title: {
         type: String,
-        required: [true, 'Title is Required']
+        required: [true, 'Title is Required'],
+        trim: true,
+        minLength: 3
     },
     year: {
         type: Number,
