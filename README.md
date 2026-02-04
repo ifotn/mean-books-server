@@ -11,3 +11,7 @@ Express REST API Backend
 `npm run dev` - start application using nodemon to watch for changes
 
 `npm i body-parser` - used to parse json body in http requests
+
+## Lesson 5 Notes & NPM Commands
+
+`npm i mongoose` - data access lib for MongoDB
