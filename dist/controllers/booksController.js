@@ -34,7 +34,32 @@ const getBooks = async (req, res) => {
     return res.status(200).json(books);
 };
 exports.getBooks = getBooks;
-// POST: save new book from request body
+/**
+* @swagger
+* /api/v1/books:
+*   post:
+*     summary: Add a new book
+*     tags:
+*       - Book
+*     requestBody:
+*       required: true
+*       content:
+*         application/json:
+*           schema:
+*             type: object
+*           properties:
+*             title:
+*               type: string
+*               required: true
+*             year:
+*               type: number
+*               required: true
+*   responses:
+*     201:
+*       description: Book created
+*     400:
+*       description: Bad request
+*/
 const createBook = async (req, res) => {
     // validate
     if (!req.body) {
@@ -50,7 +75,38 @@ const createBook = async (req, res) => {
     }
 };
 exports.createBook = createBook;
-// PUT: update book based on id in url param => /api/v1/books/3893
+/** @swagger
+* /api/v1/books/{id}:
+*   put:
+*     summary: Update a book
+*     tags:
+*       - Book
+*     parameters:
+*       - name: id
+*         required: true
+*         schema:
+*           type: string
+*     requestBody:
+*       required: true
+*       content:
+*         application/json:
+*           schema:
+*             type: object
+*           properties:
+*             title:
+*               type: string
+*               required: true
+*             year:
+*               type: number
+*               required: true
+*   responses:
+*     204:
+*       description: Book updated
+*     400:
+*       description: Bad request
+*     404:
+*       description: Book not found
+*/
 const updateBook = async (req, res) => {
     // find book based on id param
     const book = await book_1.default.findById(req.params.id);
@@ -68,7 +124,25 @@ const updateBook = async (req, res) => {
     }
 };
 exports.updateBook = updateBook;
-// DELETE: remove book based on id in url param => /api/v1/books/3893
+/** @swagger
+* /api/v1/books/{id}:
+*   delete:
+*     summary: Remove a book
+*     tags:
+*       - Book
+*     parameters:
+*       - name: id
+*         required: true
+*         schema:
+*           type: string
+*   responses:
+*     204:
+*       description: Book deleted
+*     400:
+*       description: Bad request
+*     404:
+*       description: Book not found
+*/
 const deleteBook = async (req, res) => {
     // find book based on id param
     const book = await book_1.default.findById(req.params.id);
