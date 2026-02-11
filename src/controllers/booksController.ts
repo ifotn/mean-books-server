@@ -68,13 +68,13 @@ export const getBooks = async (req: Request, res: Response) => {
 *         application/json:
 *           schema:
 *             type: object
-*           properties:
-*             title:
-*               type: string
-*               required: true
-*             year:
-*               type: number
-*               required: true
+*             properties:
+*               title:
+*                 type: string
+*                 required: true
+*               year:
+*                 type: number
+*                 required: true
 *   responses:
 *     201:
 *       description: Book created
@@ -114,13 +114,13 @@ export const createBook = async (req: Request, res: Response) => {
 *         application/json:
 *           schema:
 *             type: object
-*           properties:
-*             title:
-*               type: string
-*               required: true
-*             year:
-*               type: number
-*               required: true
+*             properties:
+*               title:
+*                 type: string
+*                 required: true
+*               year:
+*                 type: number
+*                 required: true
 *   responses:
 *     204:
 *       description: Book updated
@@ -183,5 +183,64 @@ export const deleteBook = async (req: Request, res: Response) => {
     }
     catch(error) {
         return res.status(400).json({ 'error': error });
+    }
+};
+
+/**
+ * @swagger
+ * /api/v1/books/{id}/authors: 
+ *   post:
+ *     summary: Add an author to a book
+ *     tags:
+ *       - Book, Author
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string 
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               firstName:
+ *                 required: true
+ *                 type: string
+ *               lastName:
+ *                 required: true
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: New child doc created
+ *       400:
+ *         description: Bad request - invalid author content
+ *       404:
+ *         description: Book not found
+ */
+export const createAuthor = async (req: Request, res: Response) => {
+    try {
+        // get book id from url param e.g. /books/{id}/authors
+        const id: string = req.params.id;
+
+        // fetch current book, checking it exists
+        const book = await Book.findById(id);
+
+        // if id not in db => 404
+        if (!book) {
+            return res.status(404).json({ 'error': 'Book Not Found' });
+        }
+
+        // if id found, add author to book authors array using push()
+        book.authors.push(req.body);
+
+        // save changes to book doc
+        await book.save();
+        return res.status(201).json(book);  // Resource created (child doc)
+    }
+    catch (error) {
+        return res.status(400).json({ 'error': error.message });
     }
 };

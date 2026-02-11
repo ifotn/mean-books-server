@@ -34,6 +34,20 @@ var __importStar = (this && this.__importStar) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
+const authorSchema = new mongoose_1.Schema({
+    firstName: {
+        type: String,
+        required: [true, 'First Name is Required'],
+        trim: true,
+        minLength: 1
+    },
+    lastName: {
+        type: String,
+        required: [true, 'Last Name is Required'],
+        trim: true,
+        minLength: 1
+    }
+});
 const bookSchema = new mongoose_1.Schema({
     title: {
         type: String,
@@ -45,7 +59,8 @@ const bookSchema = new mongoose_1.Schema({
         type: Number,
         required: [true, 'Year is Required'],
         min: 1000
-    }
+    },
+    authors: [authorSchema]
 });
 // our model inherits from Mongoose so it has all the built-in CRUD methods
 const Book = mongoose_1.default.model('Book', bookSchema);

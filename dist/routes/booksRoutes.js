@@ -13,5 +13,6 @@ router.get('/', booksController_1.getBooks);
 router.post('/', booksController_1.createBook);
 router.put('/:id', booksController_1.updateBook);
 router.delete('/:id', booksController_1.deleteBook);
+router.post('/:id/authors', booksController_1.createAuthor);
 // make router public
 exports.default = router;

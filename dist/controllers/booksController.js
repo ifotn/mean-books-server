@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteBook = exports.updateBook = exports.createBook = exports.getBooks = void 0;
+exports.createAuthor = exports.deleteBook = exports.updateBook = exports.createBook = exports.getBooks = void 0;
 const book_1 = __importDefault(require("../models/book"));
 // // in-memory Book def => replaced next week with book model
 // interface Book {
@@ -66,13 +66,13 @@ exports.getBooks = getBooks;
 *         application/json:
 *           schema:
 *             type: object
-*           properties:
-*             title:
-*               type: string
-*               required: true
-*             year:
-*               type: number
-*               required: true
+*             properties:
+*               title:
+*                 type: string
+*                 required: true
+*               year:
+*                 type: number
+*                 required: true
 *   responses:
 *     201:
 *       description: Book created
@@ -111,13 +111,13 @@ exports.createBook = createBook;
 *         application/json:
 *           schema:
 *             type: object
-*           properties:
-*             title:
-*               type: string
-*               required: true
-*             year:
-*               type: number
-*               required: true
+*             properties:
+*               title:
+*                 type: string
+*                 required: true
+*               year:
+*                 type: number
+*                 required: true
 *   responses:
 *     204:
 *       description: Book updated
@@ -179,3 +179,58 @@ const deleteBook = async (req, res) => {
     }
 };
 exports.deleteBook = deleteBook;
+/**
+ * @swagger
+ * /api/v1/books/{id}/authors:
+ *   post:
+ *     summary: Add an author to a book
+ *     tags:
+ *       - Book, Author
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               firstName:
+ *                 required: true
+ *                 type: string
+ *               lastName:
+ *                 required: true
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: New child doc created
+ *       400:
+ *         description: Bad request - invalid author content
+ *       404:
+ *         description: Book not found
+ */
+const createAuthor = async (req, res) => {
+    try {
+        // get book id from url param e.g. /books/{id}/authors
+        const id = req.params.id;
+        // fetch current book, checking it exists
+        const book = await book_1.default.findById(id);
+        // if id not in db => 404
+        if (!book) {
+            return res.status(404).json({ 'error': 'Book Not Found' });
+        }
+        // if id found, add author to book authors array using push()
+        book.authors.push(req.body);
+        // save changes to book doc
+        await book.save();
+        return res.status(201).json(book); // Resource created (child doc)
+    }
+    catch (error) {
+        return res.status(400).json({ 'error': error.message });
+    }
+};
+exports.createAuthor = createAuthor;

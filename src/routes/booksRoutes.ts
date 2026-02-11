@@ -2,7 +2,7 @@
 import express, { Router } from 'express';
 
 // our own mvc file imports
-import { createBook, deleteBook, getBooks, updateBook } from '../controllers/booksController';
+import { createBook, deleteBook, getBooks, updateBook, createAuthor } from '../controllers/booksController';
 
 const router: Router = express.Router();
 
@@ -11,6 +11,7 @@ router.get('/', getBooks);
 router.post('/', createBook);
 router.put('/:id', updateBook);
 router.delete('/:id', deleteBook);
+router.post('/:id/authors', createAuthor);
 
 // make router public
 export default router;
