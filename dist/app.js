@@ -34,7 +34,13 @@ const options = {
 const openApiSpecs = (0, swagger_jsdoc_1.default)(options);
 app.use('/api-docs', swagger_ui_express_1.default.serve);
 app.get('/api-docs', (req, res) => {
-    const html = swagger_ui_express_1.default.generateHTML(openApiSpecs);
+    const html = swagger_ui_express_1.default.generateHTML(openApiSpecs, {
+        customCssUrl: 'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui.min.css',
+        customJs: [
+            'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-bundle.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-standalone-preset.js'
+        ]
+    });
     res.send(html);
 });
 app.listen(4000, () => { console.log('Express API running on port 4000'); });
