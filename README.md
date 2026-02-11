@@ -15,3 +15,9 @@ Express REST API Backend
 ## Lesson 5 Notes & NPM Commands
 
 `npm i mongoose` - data access lib for MongoDB
+
+## Lesson 6 Notes & NPM Commands
+
+Installing and using Swagger for API doc generation based on YAML comments above each controller method.
+
+`npm i swagger-jsdoc swagger-ui-express` - packages for Swagger API docs

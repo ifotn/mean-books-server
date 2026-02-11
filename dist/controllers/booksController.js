@@ -17,7 +17,17 @@ const book_1 = __importDefault(require("../models/book"));
 //     { id: 2, title: 'Hell\'s Acre', year: 1984 },
 //     { id: 3, title: 'Claw of the Concilliator', year: 1981 }
 // ];
-// GET: retrieve all books
+/**
+* @swagger
+* /api/v1/books:
+*   get:
+*     summary: Retrieve list of books
+*     tags:
+*       - Book
+*   responses:
+*     200:
+*       description: A list of books
+*/
 const getBooks = async (req, res) => {
     // use Book Model to query books collection in MongoDB
     const books = await book_1.default.find();

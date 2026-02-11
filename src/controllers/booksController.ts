@@ -16,7 +16,17 @@ import Book from '../models/book';
 //     { id: 3, title: 'Claw of the Concilliator', year: 1981 }
 // ];
 
-// GET: retrieve all books
+/**
+* @swagger
+* /api/v1/books:
+*   get: 
+*     summary: Retrieve list of books
+*     tags: 
+*       - Book
+*   responses:
+*     200:
+*       description: A list of books
+*/
 export const getBooks = async (req: Request, res: Response) => {
     // use Book Model to query books collection in MongoDB
     const books = await Book.find();
