@@ -21,16 +21,35 @@ const book_1 = __importDefault(require("../models/book"));
 * @swagger
 * /api/v1/books:
 *   get:
-*     summary: Retrieve list of books
+*     summary: Retrieve list of books. Optional filter parameters for title & year
 *     tags:
 *       - Book
+*     parameters:
+*       - name: title
+*         in: query
+*         required: false
+*         schema:
+*           type: string
+*       - name: year
+*         in: query
+*         required: false
+*         schema:
+*           type: number
 *   responses:
 *     200:
 *       description: A list of books
+*     404:
+*       description: No books found
 */
 const getBooks = async (req, res) => {
+    // use req.query to fetch any optional url param key/values e.g. /books?year=2000
+    const filter = req.query;
     // use Book Model to query books collection in MongoDB
-    const books = await book_1.default.find();
+    const books = await book_1.default.find(filter);
+    // return 404 if no books found
+    if (books.length === 0) {
+        return res.status(404).json({ error: 'No Books Found' });
+    }
     return res.status(200).json(books);
 };
 exports.getBooks = getBooks;
