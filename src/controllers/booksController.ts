@@ -140,7 +140,10 @@ export const updateBook = async (req: Request, res: Response) => {
 
     // update book values from request body
     try {
-        await Book.findByIdAndUpdate(req.params.id, req.body);
+        //await Book.findByIdAndUpdate(req.params.id, req.body);
+        book.set(req.body);
+        await book.validate();
+        await book.save();
         return res.status(204).json(); // 204: Accepted, No Content
     }
     catch(error) {
