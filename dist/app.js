@@ -9,6 +9,7 @@ const body_parser_1 = __importDefault(require("body-parser"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const swagger_jsdoc_1 = __importDefault(require("swagger-jsdoc"));
 const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
+const cors_1 = __importDefault(require("cors"));
 // our own mvc file imports
 const booksRoutes_1 = __importDefault(require("./routes/booksRoutes"));
 // create & start new express app
@@ -19,6 +20,11 @@ app.use(body_parser_1.default.json());
 mongoose_1.default.connect(process.env.DB, {})
     .then((response) => console.log('Connected to MongoDB'))
     .catch((error) => console.log(`Connection Error: ${error}`));
+// cors config to grant access to angular client
+app.use((0, cors_1.default)({
+    origin: process.env.CLIENT_URL,
+    methods: 'GET,POST,PUT,DELETE,HEAD,OPTIONS'
+}));
 // swagger config
 const options = {
     definition: {

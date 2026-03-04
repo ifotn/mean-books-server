@@ -21,3 +21,11 @@ Express REST API Backend
 Installing and using Swagger for API doc generation based on YAML comments above each controller method.
 
 `npm i swagger-jsdoc swagger-ui-express` - packages for Swagger API docs
+
+## Lesson 8 Notes & NPM Commands
+
+Add CLIENT_URL=http://localhost:4200 to .env and install and configure CORS to grant access to our Angular client app.
+
+```bash
+npm i cors
+```

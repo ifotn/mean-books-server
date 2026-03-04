@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import swaggerJsDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
+import cors from 'cors';
 
 // our own mvc file imports
 import booksRoutes from './routes/booksRoutes';
@@ -18,6 +19,12 @@ app.use(bodyParser.json());
 mongoose.connect(process.env.DB, {})
 .then((response) => console.log('Connected to MongoDB'))
 .catch((error) => console.log(`Connection Error: ${error}`));
+
+// cors config to grant access to angular client
+app.use(cors({
+    origin: process.env.CLIENT_URL,
+    methods: 'GET,POST,PUT,DELETE,HEAD,OPTIONS'
+}));
 
 // swagger config
 const options = {
