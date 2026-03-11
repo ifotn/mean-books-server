@@ -13,6 +13,7 @@ const cors_1 = __importDefault(require("cors"));
 const passport_1 = __importDefault(require("passport"));
 // our own mvc file imports
 const booksRoutes_1 = __importDefault(require("./routes/booksRoutes"));
+const usersRoutes_1 = __importDefault(require("./routes/usersRoutes"));
 const user_1 = __importDefault(require("./models/user"));
 // create & start new express app
 const app = (0, express_1.default)();
@@ -63,3 +64,4 @@ app.get('/api-docs', (req, res) => {
 app.listen(4000, () => { console.log('Express API running on port 4000'); });
 // map url's based on resource names to corresponding routers
 app.use('/api/v1/books', booksRoutes_1.default);
+app.use('/api/v1/users', usersRoutes_1.default);

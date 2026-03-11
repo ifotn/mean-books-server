@@ -9,6 +9,7 @@ import passport from 'passport';
 
 // our own mvc file imports
 import booksRoutes from './routes/booksRoutes';
+import usersRoutes from './routes/usersRoutes';
 import User from './models/user';
 
 // create & start new express app
@@ -71,3 +72,4 @@ app.listen(4000, () => { console.log('Express API running on port 4000') });
 
 // map url's based on resource names to corresponding routers
 app.use('/api/v1/books', booksRoutes);
+app.use('/api/v1/users', usersRoutes);

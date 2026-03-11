@@ -32,8 +32,12 @@ var __importStar = (this && this.__importStar) || (function () {
         return result;
     };
 })();
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
+const passport_local_mongoose_1 = __importDefault(require("passport-local-mongoose"));
 const userSchema = new mongoose_1.Schema({
     username: {
         type: String,
@@ -47,5 +51,7 @@ const userSchema = new mongoose_1.Schema({
         minLength: 8
     }
 });
+// model "plugs in" or extends passport-local-mongoose so it inherits all its methods
+userSchema.plugin(passport_local_mongoose_1.default);
 const User = mongoose_1.default.model('User', userSchema);
 exports.default = User;
