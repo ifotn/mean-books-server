@@ -5,9 +5,11 @@ import mongoose from 'mongoose';
 import swaggerJsDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import cors from 'cors';
+import passport from 'passport';
 
 // our own mvc file imports
 import booksRoutes from './routes/booksRoutes';
+import User from './models/user';
 
 // create & start new express app
 const app: Application = express();
@@ -25,6 +27,18 @@ app.use(cors({
     origin: process.env.CLIENT_URL,
     methods: 'GET,POST,PUT,DELETE,HEAD,OPTIONS'
 }));
+
+// passport config
+app.use(passport.initialize());
+
+// tell passport which model is handling authentication
+passport.use(User.createStrategy());
+
+// link User model w/passport session mgmt of user data
+// serialize => write user to session
+// deserialize => read user from session
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 // swagger config
 const options = {

@@ -29,3 +29,10 @@ Add CLIENT_URL=http://localhost:4200 to .env and install and configure CORS to g
 ```bash
 npm i cors
 ```
+
+## Lesson 9 Notes & NPM Commands
+
+```bash
+npm i passport passport-local passport-local-mongoose 
+npm audit fix
+```bash

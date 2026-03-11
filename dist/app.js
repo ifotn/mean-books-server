@@ -10,8 +10,10 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const swagger_jsdoc_1 = __importDefault(require("swagger-jsdoc"));
 const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 const cors_1 = __importDefault(require("cors"));
+const passport_1 = __importDefault(require("passport"));
 // our own mvc file imports
 const booksRoutes_1 = __importDefault(require("./routes/booksRoutes"));
+const user_1 = __importDefault(require("./models/user"));
 // create & start new express app
 const app = (0, express_1.default)();
 // app config
@@ -25,6 +27,15 @@ app.use((0, cors_1.default)({
     origin: process.env.CLIENT_URL,
     methods: 'GET,POST,PUT,DELETE,HEAD,OPTIONS'
 }));
+// passport config
+app.use(passport_1.default.initialize());
+// tell passport which model is handling authentication
+passport_1.default.use(user_1.default.createStrategy());
+// link User model w/passport session mgmt of user data
+// serialize => write user to session
+// deserialize => read user from session
+passport_1.default.serializeUser(user_1.default.serializeUser());
+passport_1.default.deserializeUser(user_1.default.deserializeUser());
 // swagger config
 const options = {
     definition: {
