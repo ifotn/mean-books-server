@@ -29,3 +29,24 @@ export const register = async(req: Request, res: Response) => {
         return res.status(400).json(error);
     }
 };
+
+export const login = async (req: Request, res: Response) => {
+    try {
+        // first try by username only
+        const user = await User.findOne({ username: req.body.username });
+
+        // username not found
+        if (!user) throw new Error('Invalid Login');
+
+        const result = await user.authenticate(req.body.password);
+
+        // incorrect password after salt / hash
+        if (!result.user) throw new Error('Invalid Login');
+
+        // success => return id and username but not salt & hash password vals
+        return res.status(200).json({ id: result.user._id, username: result.user.username });
+    }
+    catch (error) {
+        return res.status(401).json('Invalid Login');
+    }
+};

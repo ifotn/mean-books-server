@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.register = void 0;
+exports.login = exports.register = void 0;
 const user_1 = __importDefault(require("../models/user"));
 const register = async (req, res) => {
     try {
@@ -28,3 +28,22 @@ const register = async (req, res) => {
     }
 };
 exports.register = register;
+const login = async (req, res) => {
+    try {
+        // first try by username only
+        const user = await user_1.default.findOne({ username: req.body.username });
+        // username not found
+        if (!user)
+            throw new Error('Invalid Login');
+        const result = await user.authenticate(req.body.password);
+        // incorrect password after salt / hash
+        if (!result.user)
+            throw new Error('Invalid Login');
+        // success => return id and username but not salt & hash password vals
+        return res.status(200).json({ id: result.user._id, username: result.user.username });
+    }
+    catch (error) {
+        return res.status(401).json('Invalid Login');
+    }
+};
+exports.login = login;

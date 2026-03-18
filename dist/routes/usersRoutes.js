@@ -8,4 +8,5 @@ const usersController_1 = require("../controllers/usersController");
 const router = express_1.default.Router();
 // url mapping
 router.post('/register', usersController_1.register);
+router.post('/login', usersController_1.login);
 exports.default = router;
