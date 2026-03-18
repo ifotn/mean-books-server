@@ -11,6 +11,8 @@ const swagger_jsdoc_1 = __importDefault(require("swagger-jsdoc"));
 const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 const cors_1 = __importDefault(require("cors"));
 const passport_1 = __importDefault(require("passport"));
+const passport_jwt_1 = require("passport-jwt");
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
 // our own mvc file imports
 const booksRoutes_1 = __importDefault(require("./routes/booksRoutes"));
 const usersRoutes_1 = __importDefault(require("./routes/usersRoutes"));
@@ -19,6 +21,7 @@ const user_1 = __importDefault(require("./models/user"));
 const app = (0, express_1.default)();
 // app config
 app.use(body_parser_1.default.json());
+app.use((0, cookie_parser_1.default)()); // to use cookies for jwt
 // db connection
 mongoose_1.default.connect(process.env.DB, {})
     .then((response) => console.log('Connected to MongoDB'))
@@ -37,6 +40,27 @@ passport_1.default.use(user_1.default.createStrategy());
 // deserialize => read user from session
 passport_1.default.serializeUser(user_1.default.serializeUser());
 passport_1.default.deserializeUser(user_1.default.deserializeUser());
+// jwt config, using random string for hashing
+const jwtOptions = {
+    jwtFromRequest: passport_jwt_1.ExtractJwt.fromAuthHeaderAsBearerToken(),
+    secretOrKey: process.env.PASSPORT_SECRET
+};
+const strategy = new passport_jwt_1.Strategy(jwtOptions, async (jwtPayload, callback) => {
+    // before creating jwt, validate user so we can store user data in token
+    try {
+        const user = await user_1.default.findById(jwtPayload.id);
+        // user not found => error
+        if (!user)
+            throw new Error('Unauthorized');
+        // user found, return user, no error
+        return callback(null, user);
+    }
+    catch (error) {
+        // user not found, return error, no user
+        return callback(error, null);
+    }
+});
+passport_1.default.use(strategy);
 // swagger config
 const options = {
     definition: {

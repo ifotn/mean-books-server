@@ -3,8 +3,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.login = exports.register = void 0;
+exports.logout = exports.login = exports.register = void 0;
 const user_1 = __importDefault(require("../models/user"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+// private methods for token mgmt
+const generateToken = (user) => {
+    // make jwt with user data
+    const jwtPayload = {
+        id: user._id,
+        username: user.username
+    };
+    const jwtOptions = { expiresIn: '1hr' };
+    // make token using options above
+    return jsonwebtoken_1.default.sign(jwtPayload, process.env.PASSPORT_SECRET, jwtOptions);
+};
 const register = async (req, res) => {
     try {
         const duplicateUser = await user_1.default.find({ username: req.body.username });
@@ -39,7 +51,11 @@ const login = async (req, res) => {
         // incorrect password after salt / hash
         if (!result.user)
             throw new Error('Invalid Login');
-        // success => return id and username but not salt & hash password vals
+        // success 
+        // create jwt using user id + username
+        const authToken = generateToken(result.user);
+        console.log(`authToken: ${authToken}`);
+        // return id and username but not salt & hash password vals
         return res.status(200).json({ id: result.user._id, username: result.user.username });
     }
     catch (error) {
@@ -47,3 +63,7 @@ const login = async (req, res) => {
     }
 };
 exports.login = login;
+const logout = (req, res) => {
+    return res.status(200).json({ message: 'Logged Out' });
+};
+exports.logout = logout;

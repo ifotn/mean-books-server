@@ -1,5 +1,20 @@
 import express, { Request, Response } from 'express';
 import User from '../models/user';
+import jwt from 'jsonwebtoken';
+
+// private methods for token mgmt
+const generateToken = (user: any): string => {
+    // make jwt with user data
+    const jwtPayload = {
+        id: user._id,
+        username: user.username
+    };
+
+    const jwtOptions = { expiresIn: '1hr' };
+
+    // make token using options above
+    return jwt.sign(jwtPayload, process.env.PASSPORT_SECRET, jwtOptions);
+}
 
 export const register = async(req: Request, res: Response) => {
     try {
@@ -43,10 +58,20 @@ export const login = async (req: Request, res: Response) => {
         // incorrect password after salt / hash
         if (!result.user) throw new Error('Invalid Login');
 
-        // success => return id and username but not salt & hash password vals
+        // success 
+        // create jwt using user id + username
+        const authToken: string = generateToken(result.user);
+        console.log(`authToken: ${authToken}`); 
+
+        // return id and username but not salt & hash password vals
         return res.status(200).json({ id: result.user._id, username: result.user.username });
     }
     catch (error) {
         return res.status(401).json('Invalid Login');
     }
 };
+
+export const logout = (req: Request, res: Response) => {
+
+    return res.status(200).json({ message: 'Logged Out' });
+}

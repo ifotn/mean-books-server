@@ -6,6 +6,8 @@ import swaggerJsDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import cors from 'cors';
 import passport from 'passport';
+import { Strategy, ExtractJwt } from 'passport-jwt';
+import cookieParser from 'cookie-parser';
 
 // our own mvc file imports
 import booksRoutes from './routes/booksRoutes';
@@ -17,6 +19,7 @@ const app: Application = express();
 
 // app config
 app.use(bodyParser.json());
+app.use(cookieParser());  // to use cookies for jwt
 
 // db connection
 mongoose.connect(process.env.DB, {})
@@ -40,6 +43,31 @@ passport.use(User.createStrategy());
 // deserialize => read user from session
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
+
+// jwt config, using random string for hashing
+const jwtOptions = {
+    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+    secretOrKey: process.env.PASSPORT_SECRET
+};
+
+const strategy = new Strategy(jwtOptions, async (jwtPayload, callback) => {
+    // before creating jwt, validate user so we can store user data in token
+    try {
+        const user = await User.findById(jwtPayload.id);
+
+        // user not found => error
+        if (!user) throw new Error('Unauthorized');
+
+        // user found, return user, no error
+        return callback(null, user);
+    }
+    catch (error) {
+        // user not found, return error, no user
+        return callback(error, null);
+    }
+});
+
+passport.use(strategy);
 
 // swagger config
 const options = {

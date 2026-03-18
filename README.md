@@ -35,4 +35,10 @@ npm i cors
 ```bash
 npm i passport passport-local passport-local-mongoose 
 npm audit fix
+```
+
+## Lesson 10 Notes & NPM Commands
+
 ```bash
+npm i jsonwebtoken passport-jwt cookie-parser
+```
