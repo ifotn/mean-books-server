@@ -17,6 +17,18 @@ const generateToken = (user) => {
     // make token using options above
     return jsonwebtoken_1.default.sign(jwtPayload, process.env.PASSPORT_SECRET, jwtOptions);
 };
+const setTokenCookie = (res, token) => {
+    // put jwt in httponly cookie
+    res.cookie('authToken', token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'None'
+    });
+};
+const clearTokenCookie = (res) => {
+    // remove cookie containing jwt
+    res.clearCookie('authToken');
+};
 const register = async (req, res) => {
     try {
         const duplicateUser = await user_1.default.find({ username: req.body.username });
@@ -54,7 +66,8 @@ const login = async (req, res) => {
         // success 
         // create jwt using user id + username
         const authToken = generateToken(result.user);
-        console.log(`authToken: ${authToken}`);
+        // store jwt in httponly cookie
+        setTokenCookie(res, authToken);
         // return id and username but not salt & hash password vals
         return res.status(200).json({ id: result.user._id, username: result.user.username });
     }
@@ -64,6 +77,8 @@ const login = async (req, res) => {
 };
 exports.login = login;
 const logout = (req, res) => {
+    // remove cookie containing jwt
+    clearTokenCookie(res);
     return res.status(200).json({ message: 'Logged Out' });
 };
 exports.logout = logout;
