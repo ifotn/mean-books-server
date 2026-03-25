@@ -45,7 +45,7 @@ const register = async (req, res) => {
         // create new user
         await user.validate();
         await user.save();
-        return res.status(201).json(user);
+        return res.status(201).json({ id: user._id, username: user.username });
     }
     catch (error) {
         return res.status(400).json(error);
