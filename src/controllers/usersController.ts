@@ -91,3 +91,10 @@ export const logout = (req: Request, res: Response) => {
     clearTokenCookie(res);
     return res.status(200).json({ message: 'Logged Out' });
 }
+
+export const verifyAuth = (req: Request, res: Response) => {
+    res.status(200).json({
+        authenticated: true,
+        username: req.user?.username
+    });
+}

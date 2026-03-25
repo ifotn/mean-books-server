@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.logout = exports.login = exports.register = void 0;
+exports.verifyAuth = exports.logout = exports.login = exports.register = void 0;
 const user_1 = __importDefault(require("../models/user"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 // private methods for token mgmt
@@ -82,3 +82,10 @@ const logout = (req, res) => {
     return res.status(200).json({ message: 'Logged Out' });
 };
 exports.logout = logout;
+const verifyAuth = (req, res) => {
+    res.status(200).json({
+        authenticated: true,
+        username: req.user?.username
+    });
+};
+exports.verifyAuth = verifyAuth;
