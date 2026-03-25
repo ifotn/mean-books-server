@@ -29,7 +29,9 @@ mongoose_1.default.connect(process.env.DB, {})
 // cors config to grant access to angular client
 app.use((0, cors_1.default)({
     origin: process.env.CLIENT_URL,
-    methods: 'GET,POST,PUT,DELETE,HEAD,OPTIONS'
+    methods: 'GET,POST,PUT,DELETE,HEAD,OPTIONS',
+    credentials: true,
+    allowedHeaders: 'Content-Type,Authorization'
 }));
 // passport config
 app.use(passport_1.default.initialize());
